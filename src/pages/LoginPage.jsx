@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginUser } from '../firebase/auth';
+import { loginUser } from '../firebase/auth.js';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -15,9 +15,10 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Write your code here!
+      await loginUser(email, password);
+      navigate('/'); // Redirect to home page on successful login
     } catch (err) {
-      // And here too
+      setError('Invalid email or password. Please try again.');
     }
     
     setLoading(false);

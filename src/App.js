@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { AppProvider }  from './contexts/AppContext';
+import { AuthProvider } from './context/AuthContext';
+import { AppProvider }  from './context/AppContext';
 
 import Navbar          from './components/Navbar';
 import Hero            from './components/Hero';
@@ -28,8 +28,7 @@ function MainLayout() {
 
 function App() {
   return (
-    // AuthProvider must wrap everything so any component can call useAuth()
-      {/* AppProvider must be inside AuthProvider so it can read currentUser */}
+    <AuthProvider>
       <AppProvider>
         <Router>
           <Routes>
@@ -39,6 +38,7 @@ function App() {
           </Routes>
         </Router>
       </AppProvider>
+    </AuthProvider>
   );
 }
 

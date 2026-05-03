@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerUser } from '../firebase/auth';
+import { registerUser } from '../firebase/auth.js';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -13,7 +13,10 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    if (password.length < 6) {
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
+
+    if (cleanPassword.length < 6) {
       setError('Password must be at least 6 characters.');
       return;
     }
@@ -21,9 +24,20 @@ export default function RegisterPage() {
     setLoading(true);
 
     try { 
-      // code here
+      await registerUser(cleanEmail, cleanPassword);
+      navigate('/login'); // Redirect to home page on successful registration
     } catch (err) {
-      // Write if/else statements here!
+      if (err.code === 'auth/email-already-in-use') {
+        setError('This email is already in use. Try logging in.');
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError('Email/password sign-in is disabled in Firebase. Enable it in Firebase Console > Authentication > Sign-in method.');
+      } else if (err.code === 'auth/invalid-api-key') {
+        setError('Invalid Firebase API key. Recheck REACT_APP_FIREBASE_API_KEY and restart the dev server.');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network error while contacting Firebase. Check your connection and try again.');
+      } else {
+        setError(err.message || 'Something went wrong. Please try again.');
+      }
     }
 
     setLoading(false);

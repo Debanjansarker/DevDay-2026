@@ -15,6 +15,8 @@ const INITIAL_CATEGORIES = Object.keys(CATEGORY_PRICES);
 const Food = () => {
   const [foods, setFoods] = useState([]);
   const { favorites, toggleFavorite } = useContext(AppContext);
+  const [isSearching, setIsSearching] = useState(false);
+  const [allFoods, setAllFoods] = useState([]);
 
   // Fetch initial menu from TheMealDB on mount
   useEffect(() => {
